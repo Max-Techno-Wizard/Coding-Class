@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Appreciation Week</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #1a237e, #ffeb3b); /* Blue & Yellow - change if needed */
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #fff;
+      margin: 0.5em;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+      animation: pop 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes pop {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+
+    input {
+      padding: 0.7em;
+      font-size: 1em;
+      margin-top: 1em;
+      border: none;
+      border-radius: 5px;
+      width: 250px;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 1em;
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .link-output {
+      margin-top: 1em;
+      color: #fff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="message">Happy Teacher Appreciation Week!</h1>
+
+  <div id="inputArea">
+    <input type="text" id="nameInput" placeholder="Enter your name..." />
+    <br>
+    <button onclick="generateLink()">🎁 Copy My Surprise Message</button>
+    <p class="link-output hidden" id="linkDisplay">Link copied!</p>
+  </div>
+
+  <!-- Confetti Animation -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    // 🎉 Confetti Animation
+    setInterval(() => {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }, 2000);
+
+    // ✨ Get name from URL if available
+    const urlParams = new URLSearchParams(window.location.search);
+    const nameFromUrl = urlParams.get('name');
+
+    if (nameFromUrl) {
+      document.getElementById('message').textContent = `Happy Teacher Appreciation Week from ${decodeURIComponent(nameFromUrl)}!`;
+      document.getElementById('inputArea').classList.add('hidden');
+    }
+
+    // 📤 Generate and copy personalized message
+    function generateLink() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name) {
+        alert('Please enter your name first.');
+        return;
+      }
+
+      const encodedName = encodeURIComponent(name);
+      const baseUrl = window.location.origin + window.location.pathname;
+      const link = `${baseUrl}?name=${encodedName}`;
+
+      const message = `🤗😇 Have you seen this??\n${name} sent you a special surprise message\n💁 Open This 👇👇\n${link}`;
+
+      navigator.clipboard.writeText(message).then(() => {
+        const linkDisplay = document.getElementById('linkDisplay');
+        linkDisplay.textContent = "Your personalized message has been copied!";
+        linkDisplay.classList.remove('hidden');
+      });
+    }
+  </script>
+</body>
+</html>

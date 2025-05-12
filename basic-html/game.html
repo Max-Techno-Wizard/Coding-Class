@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch the Falling Objects!</title>
+  <style>
+    body { 
+      margin: 0; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh; 
+      background-color: #f0f0f0; 
+    }
+    canvas { 
+      border: 2px solid #000; 
+    }
+    #score { 
+      position: absolute; 
+      top: 10px; 
+      font-size: 20px; 
+      background: #fff; 
+      padding: 5px 10px; 
+      border-radius: 5px; 
+    }
+  </style>
+</head>
+<body>
+  <div id="score">Score: 0</div>
+  <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('score');
+
+    let basket = { x: 180, y: 550, width: 60, height: 20, speed: 7 };
+    let objects = [];
+    let score = 0;
+    let gameOver = false;
+
+    // Generate falling objects
+    function generateObject() {
+      const type = Math.random() > 0.1 ? 'good' : 'bad';  // 90% chance for good, 10% for bad
+      const x = Math.random() * (canvas.width - 30);
+      objects.push({ x, y: 0, width: 30, height: 30, type, speed: 3 });
+    }
+
+    // Draw basket as a rectangle
+    function drawBasket() {
+      ctx.fillStyle = 'blue';  // Color for the basket
+      ctx.fillRect(basket.x, basket.y, basket.width, basket.height);
+    }
+
+    // Draw falling objects (good and bad) as colored rectangles
+    function drawObjects() {
+      objects.forEach(obj => {
+        ctx.fillStyle = obj.type === 'good' ? 'green' : 'red';  // Green for good objects, red for bad objects
+        ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
+      });
+    }
+
+    // Update game objects
+    function updateObjects() {
+      objects.forEach((obj, index) => {
+        obj.y += obj.speed;
+        if (obj.y > canvas.height) objects.splice(index, 1); // Remove objects that fall off-screen
+
+        // Check for collision with basket
+        if (obj.y + obj.height > basket.y && obj.x + obj.width > basket.x && obj.x < basket.x + basket.width) {
+          if (obj.type === 'good') {
+            score++;  // Increase score for good objects
+          } else {
+            gameOver = true;  // End game for bad objects (bombs)
+          }
+          objects.splice(index, 1);  // Remove the object after catching
+        }
+      });
+    }
+
+    // Draw score
+    function updateScore() {
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
+
+    // Control basket movement
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') basket.x = Math.max(basket.x - basket.speed, 0);
+      if (e.key === 'ArrowRight' || e.key === 'd') basket.x = Math.min(basket.x + basket.speed, canvas.width - basket.width);
+    });
+
+    // Game loop
+    function gameLoop() {
+      if (gameOver) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'black';
+        ctx.font = '30px Arial';
+        ctx.fillText('Game Over', 130, 250);
+        ctx.fillText('Press "R" to Restart', 100, 300);
+        return;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear canvas
+      drawBasket();
+      drawObjects();
+      updateObjects();
+      updateScore();
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Restart the game
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'r' && gameOver) {
+        score = 0;
+        gameOver = false;
+        objects = [];
+        basket.x = 180;
+        gameLoop();
+      }
+    });
+
+    // Generate objects every second
+    setInterval(generateObject, 1000);
+
+    gameLoop();  // Start the game
+  </script>
+</body>
+</html>

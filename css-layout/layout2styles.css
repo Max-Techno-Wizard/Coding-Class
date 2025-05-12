@@ -1,0 +1,65 @@
+header {
+    width: 90%;
+    padding: 30px;
+    margin: 0 auto;
+    text-align: center;
+    border: 1px solid black;
+    background-image: url(header.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+
+nav {
+    width: 90%;
+    padding: 10px;
+    margin: 5px auto;
+    text-align: center;
+    border: 1px solid black;
+}
+
+nav a {
+    display: inline-block;
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+    margin: 0 5px;
+    transition: all 0.5s ease-in-out;
+}
+
+nav a:hover {
+    color: red;
+    font-size: 18px;
+}
+
+main {
+    width: 90%;
+    height: 400px;
+    margin: 0 auto;
+    border: 1px solid black;
+    padding: 30px;
+    text-align: center;
+    font-weight: 900;
+    font-size: 30px;
+    text-size-adjust: 30px;
+    top: 10px;
+}
+
+.map-footer {
+    width: 90%;
+    margin: 0 auto;
+    height: 200px;
+    border: 1px solid black;
+    background-color: skyblue;
+}
+
+footer {
+    width: 90%;
+    padding: 30px;
+    margin: 0 auto;
+    text-align: center;
+    border: 1px solid black;
+    background-color: black;
+    color: white;
+}
